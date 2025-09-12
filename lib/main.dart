@@ -1,3 +1,4 @@
+import 'package:crm_app/bloc/data_ingestion_bloc.dart';
 import 'package:crm_app/pages/campaign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,22 +22,28 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AuthBloc(repo: repo)..add(AppStarted()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => AuthBloc(repo: repo)..add(AppStarted()),
+        ),
+        BlocProvider(
+          create: (_) => DataIngestionBloc(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Mini CRM",
         theme: ThemeData(primarySwatch: Colors.indigo),
-        // home: BlocBuilder<AuthBloc, AuthState>(
-        //   builder: (context, state) {
-        //     if (state.isAuthenticated) {
-        //       return const HomePage();
-        //     } else {
-        //       return LoginPage(repo: repo);
-        //     }
-        //   },
-        // ),
-        home:HomePage(),
+        home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state.isAuthenticated) {
+              return const HomePage();
+            } else {
+              return LoginPage(repo: repo);
+            }
+          },
+        ),
       ),
     );
   }
