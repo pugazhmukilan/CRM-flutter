@@ -15,6 +15,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     print('=== AUTH DEBUG: App started ===');
     final captured = repo.captureTokenFromUrlAndPersist();
     print('Captured token from URL: $captured');
+    if(captured == null){
+     emit(AuthState.unauthenticated());
+    }
     final token = captured ?? repo.currentToken();
     print('Final token to use: $token');
     

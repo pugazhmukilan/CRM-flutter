@@ -1,3 +1,4 @@
+import 'package:crm_app/bloc/campaign_bloc.dart';
 import 'package:crm_app/bloc/data_ingestion_bloc.dart';
 import 'package:crm_app/pages/campaign.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,9 @@ class App extends StatelessWidget {
         BlocProvider(
           create: (_) => DataIngestionBloc(),
         ),
+
+        BlocProvider(
+          create:  (_) => CampaignBloc()..add(FetchCampaignsEvent())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -44,6 +48,7 @@ class App extends StatelessWidget {
             }
           },
         ),
+        //home:HomePage(),
       ),
     );
   }
