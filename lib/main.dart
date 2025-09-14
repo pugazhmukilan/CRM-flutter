@@ -9,9 +9,10 @@ import 'bloc/auth_state.dart';
 import 'repositories/auth_repository.dart';
 import 'pages/login_page.dart';
 import 'pages/home_page.dart';
+import 'package:crm_app/backend.dart' as backend;
 
 void main() {
-  const backendBase = "http://localhost:8001"; // match your FastAPI
+  var backendBase =backend.BACKEND_URL; // match your FastAPI
   final repo = AuthRepository(backendBase: backendBase);
 
   runApp(App(repo: repo));

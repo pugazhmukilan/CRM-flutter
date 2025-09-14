@@ -1,15 +1,17 @@
 import 'dart:convert';
-import 'dart:math';
+
 import 'package:crm_app/backend.dart' as backend;
 import 'package:crm_app/repositories/auth_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:crm_app/models/campaign.dart';
 
 class CampaignService {
-  final String baseUrl = "http://localhost:8001";
+  final String baseUrl = backend.BACKEND_URL;
 
   Future<List<Campaign>> fetchCampaigns() async {
-    final response = await http.get(Uri.parse("$baseUrl/homepagecampaign/getcampagins"));
+    final url = "${backend.BACKEND_URL}/homepagecampaign/getcampaigns";
+    print("Fetching campaigns from: $url");
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       //print(response.body);
       final data = json.decode(response.body);
@@ -33,9 +35,14 @@ class CampaignService {
 
     );
     
-    print("Campaign started: ${response.body}"); 
-    return response.statusCode;
-  }
+    final statusCode = response.statusCode;
+    if (statusCode is int) {
+      return statusCode;
+    } else {
+      // Fallback for web environment
+      return int.parse(statusCode.toString());
+    }
+    }
 
   Future<void> deleteCampaign(String campaignId) async {
     final AuthRepository authRepository = AuthRepository(backendBase: backend.BACKEND_URL);

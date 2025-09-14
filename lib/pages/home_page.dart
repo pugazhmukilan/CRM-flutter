@@ -58,31 +58,68 @@ class _HomePageState extends State<HomePage> {
         listener: (context, state) {
           print("HomePage: State changed to ${state.runtimeType}");
           // optional snackbars or navigation logic
+
+          if(state is CampaignSaved){
+            print("HomePage: Campaign saved successfully");
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Campaign saved successfully!")),
+            );
+            // Refresh campaigns after saving
+            context.read<CampaignBloc>().add(FetchCampaignsEvent());
+          }
           if(state is CampaignErrorState){
             print("HomePage: Error - ${state.message}");
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Error: ${state.message}")),
             );
           }
-          if (state is CampaignSuccessfull) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Campaign Completed Successfully!'),
-            content: Text('This campaign has been successfully completed.\n All the  members have received the emails.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+          if(state is Logininagain) {
+            print("HomePage: Session expired, logging out");
+            // Show dialog before logging out
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Row(
+                    children: [
+                      Icon(Icons.error_outline, color: Colors.red, size: 24),
+                      SizedBox(width: 8),
+                      Text('Session Expired'),
+                    ],
+                  ),
+                  content: Text("Your session has expired. Please log in again."),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        context.read<AuthBloc>().add(LogoutRequested());
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+          else if (state is CampaignSuccessfull) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Campaign Completed Successfully!'),
+                  content: Text('This campaign has been successfully completed.\n All the  members have received the emails.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
 
-    if(state is CampaignErrorState){
+    else if(state is CampaignErrorState){
       print("HomePage: Error - ${state.message}");
       showDialog(
         context: context,
@@ -113,7 +150,9 @@ class _HomePageState extends State<HomePage> {
         },
       );
     }
-        },
+
+        
+            },
         builder: (context, state) {
           print("HomePage: Building with state ${state.runtimeType}");
           

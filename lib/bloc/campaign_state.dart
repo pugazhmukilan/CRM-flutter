@@ -53,3 +53,8 @@ final class CampaignSuccessfull extends CampaignState {
   @override
   List<Object> get props => [];
 }
+
+final class Logininagain extends CampaignState {
+  @override
+  List<Object> get props => [];
+}

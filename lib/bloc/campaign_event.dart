@@ -27,11 +27,11 @@ class DeleteCampaignEvent extends CampaignEvent {
   List<Object> get props => [campaignId];
 }
 
-class StartCampaign extends CampaignEvent {
+class SaveCampaign extends CampaignEvent {
   final String name;
   final List<dynamic> pipeline; // Explicitly specify the type of the list.
 
-  const StartCampaign({required this.name, required this.pipeline});
+  const SaveCampaign({required this.name, required this.pipeline});
 }
 
 class CampaignDelete extends CampaignEvent {

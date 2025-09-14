@@ -20,8 +20,8 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
     });
 
 
-    on<StartCampaign>((event, emit) async {
-      emit(CampaignInProgress(message: "Started to fetch users..."));
+    on<SaveCampaign>((event, emit) async {
+     
       final url = Uri.parse('${backend.BACKEND_URL}/campaign/fetchusers');
        final AuthRepository authRepository = AuthRepository(backendBase: backend.BACKEND_URL);
        final token = authRepository.currentToken();
@@ -37,11 +37,11 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
 
        print(response.body);
        if(response.statusCode == 401){
-        emit( AuthState.unauthenticated() as CampaignState);
+        emit( Logininagain());
         return;
        }
        if(response.statusCode == 200){
-        
+        emit(CampaignSaved());
         final users = jsonDecode(response.body);
         print("Fetched users: ${users['users']}");
 
@@ -67,8 +67,10 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
 
        if(saveresponce.statusCode == 201){
             print("Campaign saved successfully");
+            emit(CampaignInProgress(message: "Campaign saved successfully"));
             emit(CampaignSaved());
           } else {
+            emit(CampaignErrorState("Failed to save campaign"));
             print("Failed to save campaign");
             emit(CampaignInitial());
             
@@ -96,9 +98,10 @@ class CampaignBloc extends Bloc<CampaignEvent, CampaignState> {
 
     on<StartCampaignEvent>((event, emit) async {
       final CampaignService _campaignService = CampaignService();
-      emit(CampaignInProgress(message: "Starting campaign..."));
+      emit(CampaignLoadingState());
       try {
         int result = await _campaignService.startCampaign(event.campaignId);
+       
         add(FetchCampaignsEvent()); // Refresh campaigns
         if(result == 202){
           add(SetCampaign(id: event.campaignId));

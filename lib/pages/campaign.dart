@@ -145,7 +145,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Campaign"),
-        backgroundColor: Colors.blueGrey[900],
+        backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
       ),
       body: BlocConsumer<CampaignBloc, CampaignState>(
@@ -203,7 +203,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     ElevatedButton(
                       onPressed: toggleLogicalOperator,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueGrey,
+                        backgroundColor: Colors.blue[800],
                         foregroundColor: Colors.white,
                       ),
                       child: Text("Toggle: ${logicalOperator.toUpperCase()}"),
@@ -308,6 +308,11 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   onPressed: addCondition,
                   icon: const Icon(Icons.add),
                   label: const Text("Add Condition"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[800],
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(50),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -327,7 +332,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       child: ElevatedButton(
                         onPressed: previewJson,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
+                          backgroundColor: Colors.blue[800],
                           foregroundColor: Colors.white,
                           minimumSize: const Size.fromHeight(50),
                         ),
@@ -340,15 +345,16 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           BlocProvider.of<CampaignBloc>(context).add(
-                            StartCampaign(
+                            SaveCampaign(
                               name: campaignNameController.text.trim(),
                               pipeline:
                                   getpipeline(), // TODO: pass the actual pipeline
                             ),
                           );
+                          Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
+                          backgroundColor: Colors.blue[800],
                           foregroundColor: Colors.white,
                           minimumSize: const Size.fromHeight(50),
                         ),
